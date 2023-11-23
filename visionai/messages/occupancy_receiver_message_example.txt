@@ -1,0 +1,104 @@
+I20231029 22:30:06.775396  2879 receive_cat_app.cc:154] header {
+  capture_time {
+    seconds: 1698877805
+    nanos: 583722027
+  }
+  type {
+    type_class: "protobuf"
+    type_descriptor {
+      type: "google.cloud.visionai.v1.OccupancyCountingPredictionResult"
+    }
+  }
+  server_metadata {
+    offset: 71
+    ingest_time {
+      seconds: 1698877806
+      nanos: 761952716
+    }
+  }
+}
+payload: "\n\014\010\355\242\213\252\006\020\200\310\253\226\002\022*\022\024\ri\226\377>\025\207,.>\035\004\363o=%\325b\362=\035\356\034\370>\"\013\010\002\022\007Vehicle(\025\032\243\001\n\014\n\n\010\001\022\006Person\n\017\n\013\010\002\022\007Vehicle\020\001\032\201\001\nb\n\027new-annotation-gmkuEbgk\022\007polygon \001*<\n\n\r:\"\207>\025\005\307 =\n\n\r\362G,<\025\001n\366>\n\n\rx\227\033>\025\216\350v?\n\n\r\374\373h?\025\0007{?\n\n\rA\365\027?\025\351\276\267<\022\r\n\013\010\002\022\007Vehicle\022\014\n\n\010\001\022\006Person\"\022\n\00221\022\014\010\355\242\213\252\006\020\200\310\253\226\0020\202\256\244\257\311P"
+I20231029 22:30:06.778097  2879 receive_cat_app.cc:154] [type.googleapis.com/google.cloud.visionai.v1.OccupancyCountingPredictionResult] {
+  current_time {
+    seconds: 1698877805
+    nanos: 583721984
+  }
+  identified_boxes {
+    normalized_bounding_box {
+      xmin: 0.499194413
+      ymin: 0.170091733
+      width: 0.0585813671
+      height: 0.11835257
+    }
+    score: 0.484595716
+    entity {
+      label_id: 2
+      label_string: "Vehicle"
+    }
+    track_id: 21
+  }
+  stats {
+    full_frame_count {
+      entity {
+        label_id: 1
+        label_string: "Person"
+      }
+    }
+    full_frame_count {
+      entity {
+        label_id: 2
+        label_string: "Vehicle"
+      }
+      count: 1
+    }
+    active_zone_counts {
+      annotation {
+        id: "new-annotation-gmkuEbgk"
+        display_name: "polygon"
+        type: STREAM_ANNOTATION_TYPE_ACTIVE_ZONE
+        active_zone {
+          normalized_vertices {
+            x: 0.263933
+            y: 0.0392523
+          }
+          normalized_vertices {
+            x: 0.0105152
+            y: 0.481308
+          }
+          normalized_vertices {
+            x: 0.151945
+            y: 0.964486
+          }
+          normalized_vertices {
+            x: 0.910095
+            y: 0.981308
+          }
+          normalized_vertices {
+            x: 0.593586
+            y: 0.0224299
+          }
+        }
+      }
+      counts {
+        entity {
+          label_id: 2
+          label_string: "Vehicle"
+        }
+      }
+      counts {
+        entity {
+          label_id: 1
+          label_string: "Person"
+        }
+      }
+    }
+  }
+  track_info {
+    track_id: "21"
+    start_time {
+      seconds: 1698877805
+      nanos: 583721984
+    }
+  }
+  6: 2768474019586
+}

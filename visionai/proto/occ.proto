@@ -1,0 +1,190 @@
+syntax = "proto3";
+
+package occ;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// Enum describing all possible types of a stream annotation.
+enum StreamAnnotationType {
+    // Type UNSPECIFIED.
+    STREAM_ANNOTATION_TYPE_UNSPECIFIED = 0;
+  
+    // active_zone annotation defines a polygon on top of the content from an
+    // image/video based stream, following processing will only focus on the
+    // content inside the active zone.
+    STREAM_ANNOTATION_TYPE_ACTIVE_ZONE = 1;
+  
+    // crossing_line annotation defines a polyline on top of the content from an
+    // image/video based Vision AI stream, events happening across the line will
+    // be captured. For example, the counts of people who goes acroos the line
+    // in Occupancy Analytic Processor.
+    STREAM_ANNOTATION_TYPE_CROSSING_LINE = 2;
+  }
+  
+// Normalized Pplyline, which represents a curve consisting of connected
+// straight-line segments.
+message NormalizedPolyline {
+    // A sequence of vertices connected by straight lines.
+    repeated NormalizedVertex normalized_vertices = 1;
+  }
+
+// The prediction result proto for Person/Vehicle Detection.
+// A vertex represents a 2D point in the image.
+// NOTE: the normalized vertex coordinates are relative to the original image
+// and range from 0 to 1.
+message NormalizedVertex {
+    // X coordinate.
+    float x = 1;
+  
+    // Y coordinate.
+    float y = 2;
+  }
+
+// Normalized Polygon.
+message NormalizedPolygon {
+    // The bounding polygon normalized vertices. Top left corner of the image
+    // will be [0, 0].
+    repeated NormalizedVertex normalized_vertices = 1;
+  }
+
+// message about annotations about Vision AI stream resource.
+message StreamAnnotation {
+    oneof annotation_payload {
+      // Annotation for type ACTIVE_ZONE
+      NormalizedPolygon active_zone = 5;
+  
+      // Annotation for type CROSSING_LINE
+      NormalizedPolyline crossing_line = 6;
+    }
+  
+    // ID of the annotation. It must be unique when used in the certain context.
+    // For example, all the annotations to one input streams of a Vision AI
+    // application.
+    string id = 1;
+  
+    // User-friendly name for the annotation.
+    string display_name = 2;
+  
+    // The Vision AI stream resource name.
+    string source_stream = 3;
+  
+    // The actual type of Annotation.
+    StreamAnnotationType type = 4;
+  }
+
+message OccupancyCountingPredictionResult {
+
+    // Current timestamp.
+    google.protobuf.Timestamp current_time = 1;
+   
+    // The entity info for annotations from the processor.
+    message Entity {
+      // Label id.
+      int64 label_id = 1;
+      // Human readable string of the label.
+      string label_string = 2;
+    }
+   
+    // Identified box contains location and the entity of the object.
+    message IdentifiedBox {
+      // An unique id for this box.
+      int64 box_id = 1;
+      // Bounding Box in the normalized coordinates.
+      message NormalizedBoundingBox {
+        // Min in x coordinate.
+        float xmin = 1;
+        // Min in y coordinate.
+        float ymin = 2;
+        // Width of the bounding box.
+        float width = 3;
+        // Height of the bounding box.
+        float height = 4;
+      }
+   
+      // Bounding Box in the normalized coordinates.
+      NormalizedBoundingBox normalized_bounding_box = 2;
+   
+      // Confidence score associated with this box.
+      float score = 3;
+   
+      // Entity of this box.
+      Entity entity = 4;
+   
+      // A unique id to identify a track. It must be consistent across frames.
+      // It only exists if tracking is enabled.
+      int64 track_id = 5;
+    }
+   
+    // A list of identified boxes.
+    repeated IdentifiedBox identified_boxes = 2;
+   
+    // The statistics info for annotations from the processor.
+    message Stats {
+      // The object info and count for annotations from the processor.
+      message ObjectCount {
+        // Entity of this object.
+        Entity entity = 1;
+        // Count of the object.
+        int32 count = 2;
+      }
+   
+      // Counts of the full frame.
+      repeated ObjectCount full_frame_count = 1;
+   
+      // Message for Crossing line count.
+      message CrossingLineCount {
+        // Line annotation from the user.
+        StreamAnnotation annotation = 1;
+        // The direction that follows the right hand rule.
+        repeated ObjectCount positive_direction_counts = 2;
+        // The direction that is opposite to the right hand rule.
+        repeated ObjectCount negative_direction_counts = 3;
+      }
+   
+      // Crossing line counts.
+      repeated CrossingLineCount crossing_line_counts = 2;
+   
+      // Message for the active zone count.
+      message ActiveZoneCount {
+        // Active zone annotation from the user.
+        StreamAnnotation annotation = 1;
+        // Counts in the zone.
+        repeated ObjectCount counts = 2;
+      }
+   
+      // Active zone counts.
+      repeated ActiveZoneCount active_zone_counts = 3;
+    }
+   
+    // Detection statistics.
+    Stats stats = 3;
+   
+    // The track info for annotations from the processor.
+    message TrackInfo {
+      // A unique id to identify a track. It must be consistent across frames.
+      string track_id = 1;
+      // Start timestamp of this track.
+      google.protobuf.Timestamp start_time = 2;
+    }
+   
+    // The dwell time info for annotations from the processor.
+    message DwellTimeInfo {
+      // A unique id to identify a track. It must be consistent across frames.
+      string track_id = 1;
+      // The unique id for the zone in which the object is dwelling/waiting.
+      string zone_id = 2;
+      // The beginning time when a dwelling object has been identified in a zone.
+      google.protobuf.Timestamp dwell_start_time = 3;
+      // The end time when a dwelling object has exited in a zone.
+      google.protobuf.Timestamp dwell_end_time = 4;
+    }
+   
+    // Track related information. All the tracks that are live at this timestamp.
+    // It only exists if tracking is enabled.
+    repeated TrackInfo track_info = 4;
+   
+    // Dwell time related information. All the tracks that are live in a given
+    // zone with a start and end dwell time timestamp
+    repeated DwellTimeInfo dwell_time_info = 5;
+   }

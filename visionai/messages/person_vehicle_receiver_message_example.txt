@@ -1,0 +1,54 @@
+I20231025 19:46:59.996147  1766 receive_cat_app.cc:154] header {
+  capture_time {
+    seconds: 1698781619
+    nanos: 843569929
+  }
+  type {
+    type_class: "protobuf"
+    type_descriptor {
+      type: "google.cloud.visionai.v1.OccupancyCountingPredictionResult"
+    }
+  }
+  server_metadata {
+    offset: 26
+    ingest_time {
+      seconds: 1698781620
+      nanos: 55736840
+    }
+  }
+}
+payload: "\n\014\010\263\263\205\252\006\020\200\266\237\222\003\022\'\022\024\r@\217\n?\025\005\215\275>\035\230\373\022>%\t\247\345>\035\010\027\243>\"\n\010\001\022\006Person\032\037\n\r\n\013\010\002\022\007Vehicle\n\016\n\n\010\001\022\006Person\020\001"
+I20231025 19:46:59.996565  1766 receive_cat_app.cc:154] [type.googleapis.com/google.cloud.visionai.v1.OccupancyCountingPredictionResult] {
+  current_time {
+    seconds: 1698781619
+    nanos: 843569920
+  }
+  identified_boxes {
+    normalized_bounding_box {
+      xmin: 0.541248322
+      ymin: 0.370216519
+      width: 0.143537879
+      height: 0.44854
+    }
+    score: 0.318535089
+    entity {
+      label_id: 1
+      label_string: "Person"
+    }
+  }
+  stats {
+    full_frame_count {
+      entity {
+        label_id: 2
+        label_string: "Vehicle"
+      }
+    }
+    full_frame_count {
+      entity {
+        label_id: 1
+        label_string: "Person"
+      }
+      count: 1
+    }
+  }
+}
